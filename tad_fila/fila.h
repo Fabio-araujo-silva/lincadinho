@@ -1,16 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef elem int
+typedef int elem;
 
-typedef stuct no 
+typedef struct no
 {
     elem info;
-    node *prox;
-} 
-No;
+    struct no *prox;
+} No;
 
 typedef struct {
-    Node *inf, *sup;
+    No *inf, *sup;
 } Fila;
 
 void Cria(Fila*);
