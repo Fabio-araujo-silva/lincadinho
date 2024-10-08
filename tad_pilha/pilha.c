@@ -7,16 +7,16 @@ void Criar (Pilha* P)
 
 int Inserir(Pilha* P, elem* x)
 {
-    no *novo = (no*)malloc(sizeof(no));
+    No *novo = (No*)malloc(sizeof(No));
 
     //Sem memoria
-    if (novo == null) return 1;
+    if (novo == NULL) return 1;
     
     novo->info = *x;
     novo->prox = NULL;
 
     //Se a pilha está vazia
-    if EstaVazia(P) P->topo = novo;
+    if (EstaVazia(P)) P->topo = novo;
 
     //Se a pilha ja tem elementos
     else
@@ -25,23 +25,21 @@ int Inserir(Pilha* P, elem* x)
         P->topo = novo;
     }
     
-    free(no);
-    
     return 0;
 }
 
 int Remover(Pilha *P, elem *x)
 {
-    no *novo = (no*)malloc(sizeof(no));
+    No *temp = P->topo;
     
     //Se a pilha esta vazia
     if (EstaVazia(P)) return 1; 
 
     //Se a pilha ja tem elementos
-    no = P->topo;
-    *x = no;
+    *x = temp->info;
     P->topo = P->topo->prox;
-    free(no);
+    
+    free(temp);
 
     return 0;
     
@@ -53,18 +51,19 @@ int EstaVazia(Pilha *P)
     return (P->topo == NULL) ? 1 : 0;
 }
 
-int Esvaziar()
+int Esvaziar(Pilha *P)
 {
-    no *novo = (no*)malloc(sizeof(no));
     
     //Se a pilha esta vazia
     if (EstaVazia(P)) return 1; 
 
+    No *temp= P->topo;
+
     while(!EstaVazia(P))
     {
-        no = P->topo;
         P->topo = P->topo->prox;
-        free(no);
+        free(temp);
+        temp = P->topo;
     }    
 
     return 0;

@@ -1,20 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdlib.h>
 
-typedef elem int;
-
-typedef struct
-{
-    no *topo;
-} Pilha;
+typedef int elem;
 
 typedef struct bloco
 {
     elem info;
     struct bloco *prox;
-}no;
+} No;
 
-void Criar (Pilha* P);
-int Inserir(Pilha* P, elem* x);
-int Remover(Pilha *P, elem *x);
-int EstaVazia(Pilha *P);
+typedef struct
+{
+    No *topo;
+} Pilha;
+
+
+void Criar (Pilha*);
+int Inserir(Pilha*, elem*);
+int Remover(Pilha*, elem*);
+int EstaVazia(Pilha*);
+int Esvaziar(Pilha*);
