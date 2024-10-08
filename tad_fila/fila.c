@@ -1,22 +1,21 @@
-#include <stdio.h>
 #include "fila.h"
 
-void Cria(Fila* F) 
+void Cria(Fila* F)
 {
-    F->inf = NULL; 
+    F->inf = NULL;
     F->sup = NULL;
 }
 
-int Inserir(Fila* F, elem* x) 
+int Inserir(Fila* F, elem* x)
 {
-    No* novo = (No*) malloc(sizeof(Node));
-    if(novo != NULL) 
+    No* novo = (No*) malloc(sizeof(No));
+    if(novo != NULL)
     {
         novo->info = *x;
         novo->prox = NULL;
         if(F->inf == NULL)
             F->inf = novo;
-        else 
+        else
             F->sup->prox = novo;
         F->sup = novo;
         return 0;
@@ -31,25 +30,25 @@ int EstaVazia(Fila* F)
 
 int Remover(Fila* F, elem* x)
 {
-    if(!EstaVazia(F)) 
+    if(!EstaVazia(F))
     {
-        *x = F->info;
+        *x = F->inf->info;
         No* temp = F->inf;
         F->inf = F->inf->prox;
         if(F->inf == NULL)
             F->sup = NULL;
-        free(temp);       
+        free(temp);
         return 0;
     }
     return 1;
 }
 
-int Esvaziar(Fila* F) 
+int Esvaziar(Fila* F)
 {
     if(!EstaVazia(F))
     {
         No* temp = F->inf;
-        while(temp != NULL) 
+        while(temp != NULL)
         {
             F->inf = F->inf->prox;
             free(temp);
