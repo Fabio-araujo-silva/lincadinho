@@ -9,7 +9,7 @@ typedef struct nousuario{
 	char nome[MAX_caracter_nome];
 	char apelido[MAX_caracter_apelido];
 	//outras listas, pilhas e filas do usuario aqui	
-	struct usuario *prox, *ant;
+	struct nousuario *prox, *ant;
 } NoUsuario;
 
 typedef struct{
