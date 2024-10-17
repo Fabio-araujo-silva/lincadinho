@@ -16,11 +16,6 @@ typedef struct{
 	NoUsuario *inf, *sup;
 } ListaUsuarios;
 
-typedef struct noamigo{
-	int Id;
-	struct noamigo *ant;
-} NoAmigos;
-
 typedef struct{
 	NoAmigo *topo;
 } PilhaAmigos;
