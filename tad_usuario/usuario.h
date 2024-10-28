@@ -20,6 +20,7 @@ typedef struct {
 
 typedef struct pedido {
     struct amigo* fonte;
+	struct pedido *prox;
 } Pedido;
 
 typedef struct {
