@@ -43,34 +43,36 @@ int isEmpty_ListaAmigos(ListaAmigos *LA)
     return (LA->inf == NULL ? True : False);
 }
 
-int Adicionar_Usuario_Fim(ListaUsuario *LU, char nome[MAX_caracter_nome], char apelido[MAX_caracter_apelido]) 
+int Adicionar_Usuario(ListaUsuario *LU, char nome[MAX_caracter_nome], char apelido[MAX_caracter_apelido]) 
 {
     Usuario *novo = (Usuario*) malloc(sizeof(Usuario));
     if(novo == NULL)
-    {
         return 1;
-    }
     
-    strpcy(novo->nome, nome);
+    strcpy(novo->nome, nome);
     strcpy(novo->apelido, apelido);
 
-    ListaAmigos *L;
-    Criar_ListaAmigos(L);
-    novo->lista_amigos = L;
+    novo->lista_amigos = (ListaAmigos*) malloc(sizeof(ListaAmigos));
+    if (novo->lista_amigos == NULL) 
+        return 1;
+    Criar_ListaAmigos(novo->lista_amigos);
 
-    Pilha_de_mensagens* P;
-    Criar_Pilha_de_Mensagens(P);
-    novo->pilha_de_mensagens = P;
+    novo->pilha_de_mensagens = (Pilha_de_mensagens*) malloc(sizeof(Pilha_de_mensagens));
+    if (novo->pilha_de_mensagens == NULL) 
+        return 1;
+    Criar_Pilha_de_Mensagens(novo->pilha_de_mensagens);
 
-    Fila_de_Pedidos* F;
-    Criar_Fila_de_Pedidos(F);
-    novo->fila_de_pedidos = F;
+    novo->fila_de_pedidos = (Fila_de_Pedidos*) malloc(sizeof(Fila_de_Pedidos));
+    if (novo->fila_de_pedidos == NULL) 
+        return 1;
+    Criar_Fila_de_Pedidos(novo->fila_de_pedidos);
     
     novo->prox = NULL;
 
     if(isEmpty_ListaUsuario(LU))
     {
         LU->inf = novo;
+        LU->sup = novo;
     }
 
     LU->sup->prox = novo;
@@ -100,7 +102,8 @@ Usuario* Encontrar(ListaUsuario *LU, char apelido[MAX_caracter_apelido])
     return (temp);
 }
 
-int Cadastrar(ListaUsuario *LU)
+// versao 1
+void Cadastrar(ListaUsuario *LU)
 {
     char str1[MAX_caracter_nome], str2[MAX_caracter_apelido];
 
@@ -118,7 +121,20 @@ int Cadastrar(ListaUsuario *LU)
     while(Encontrar(LU, str2) != NULL);
 
     // Cria o novo usuário e o coloca no fim da lista de usuários
-    Adicionar_Usuario_Fim(LU, str1, str2);
+    Adicionar_Usuario(LU, str1, str2);
+}
+
+// Versao recursiva (essa ta maneira)
+int Cadastrar(ListaUsuario *LU, char nome[MAX_caracter_nome], char apelido[MAX_caracter_apelido]) 
+{
+    if(Encontrar(LU, apelido))
+    {
+        printf("Apelido ja existe!\n");
+        return 1;
+    }
+
+    Adicionar_Usuario(LU, nome, apelido);
+    return 0;  
 }
 
 // Esta é uma função auxiliar para tratar o caso em que um remetente não é amigo de seu destinatário
@@ -177,26 +193,28 @@ int Ler_Mensagem(Usuario *usuario)
     return 0;
 }
 
-///////////////////////////////////////////////////////////////////////
-/// minha autoria (MAURO) deve estar errado usei gepeto para testar ///
-///////////////////////////////////////////////////////////////////////
-void Sugerir_Amigos(ListaUsuario *LU) {
+void Sugerir_Amigos(ListaUsuario *LU) 
+{
     Usuario *remetente = LU->inf;
 
     // Percorre todos os usuários cadastrados
-    while (remetente != NULL) {
+    while (remetente != NULL) 
+    {
         Usuario *destinatario = remetente->prox;
 
         // Comparar remetente com cada destinatario que está adiante na lista
-        while (destinatario != NULL) {
+        while (destinatario != NULL) 
+        {
             // Só sugere parceria se não forem amigos
-            if (!Sao_Amigos(remetente, destinatario)) {
+            if (!Sao_Amigos(remetente, destinatario)) 
+            {
                 // Verifica se possuem um amigo em comum
                 Amigo *amigo1 = remetente->lista_amigos->inf;
                 while (amigo1 != NULL) {
                     Amigo *amigo2 = destinatario->lista_amigos->inf;
                     while (amigo2 != NULL) {
-                        if (strcmp(amigo1->conexao->apelido, amigo2->conexao->apelido) == 0) {
+                        if (strcmp(amigo1->conexao->apelido, amigo2->conexao->apelido) == 0) 
+                        {
                             printf("Sugestão de nova parceria: %s e %s\n", remetente->apelido, destinatario->apelido);
                             break;
                         }
@@ -212,23 +230,30 @@ void Sugerir_Amigos(ListaUsuario *LU) {
 }
 
 // Função para listar todos os usuários e seus parceiros de trabalho
-void Listar_Usuarios(ListaUsuario *LU) {//2
+void Listar_Usuarios(ListaUsuario *LU) 
+{
     Usuario *usuario_atual = LU->inf;
 
-    if (usuario_atual == NULL) {
+    if (usuario_atual == NULL) 
+    {
         printf("Nenhum usuário cadastrado.\n");
         return;
     }
 
     printf("Pessoas e seus parceiros:\n");
-    while (usuario_atual != NULL) {
+    while (usuario_atual != NULL) 
+    {
         printf("%s (%s) com os parceiros seguintes:", usuario_atual->nome, usuario_atual->apelido);
         Amigo *parceiro_atual = usuario_atual->lista_amigos->inf;
 
-        if (parceiro_atual == NULL) {
+        if (parceiro_atual == NULL) 
+        {
             printf(" Nenhum parceiro\n");
-        } else {
-            while (parceiro_atual != NULL) {
+        } 
+        else 
+        {
+            while (parceiro_atual != NULL) 
+            {
                 printf(" %s", parceiro_atual->conexao->apelido);
                 parceiro_atual = parceiro_atual->prox;
                 if (parceiro_atual != NULL) printf(",");
@@ -241,13 +266,16 @@ void Listar_Usuarios(ListaUsuario *LU) {//2
 }
 
 // Função para reinicializar o sistema, liberando memória de todas as estruturas
-void ReinicializarSistema(ListaUsuario *LU) {//8
+void ReinicializarSistema(ListaUsuario *LU) 
+{
     Usuario *usuario_atual = LU->inf;
 
-    while (usuario_atual != NULL) {
+    while (usuario_atual != NULL) 
+    {
         // Libera a lista de amigos do usuário atual
         Amigo *parceiro_atual = usuario_atual->lista_amigos->inf;
-        while (parceiro_atual != NULL) {
+        while (parceiro_atual != NULL) 
+        {
             Amigo *temp_amigo = parceiro_atual;
             parceiro_atual = parceiro_atual->prox;
             free(temp_amigo);
@@ -256,20 +284,24 @@ void ReinicializarSistema(ListaUsuario *LU) {//8
 
         // Libera a pilha de mensagens do usuário atual
         Mensagem *mensagem_atual = usuario_atual->pilha_de_mensagens->topo;
-        while (mensagem_atual != NULL) {
+        while (mensagem_atual != NULL) 
+        {
             Mensagem *temp_mensagem = mensagem_atual;
             mensagem_atual = mensagem_atual->prox;
             free(temp_mensagem);
         }
+        
         free(usuario_atual->pilha_de_mensagens);
 
         // Libera a fila de pedidos do usuário atual
         Pedido *pedido_atual = usuario_atual->fila_de_pedidos->inf;
-        while (pedido_atual != NULL) {
+        while (pedido_atual != NULL) 
+        {
             Pedido *temp_pedido = pedido_atual;
             pedido_atual = pedido_atual->prox;
             free(temp_pedido);
         }
+
         free(usuario_atual->fila_de_pedidos);
 
         // Libera o usuário atual
@@ -285,34 +317,39 @@ void ReinicializarSistema(ListaUsuario *LU) {//8
     printf("Sistema reinicializado.\n");
 }
 
-//3
-int Solicitar_Parceria(ListaUsuario *LU, char apelido_solicitante[MAX_caracter_apelido], char apelido_destinatario[MAX_caracter_apelido]) {
+int Solicitar_Parceria(ListaUsuario *LU, char apelido_solicitante[MAX_caracter_apelido], char apelido_destinatario[MAX_caracter_apelido]) 
+{
     Usuario *solicitante = Encontrar(LU, apelido_solicitante);
     Usuario *destinatario = Encontrar(LU, apelido_destinatario);
 
-    if (solicitante == NULL) {
+    if (solicitante == NULL) 
+    {
         printf("Usuário solicitante '%s' não encontrado.\n", apelido_solicitante);
         return 1;
     }
 
-    if (destinatario == NULL) {
+    if (destinatario == NULL) 
+    {
         printf("Usuário destinatário '%s' não encontrado.\n", apelido_destinatario);
         return 1;
     }
 
     Pedido *novo_pedido = (Pedido *) malloc(sizeof(Pedido));
-    if (novo_pedido == NULL) {
+    if (novo_pedido == NULL) 
+    {
         printf("Erro de memória ao criar pedido de parceria.\n");
         return 1;
     }
 
-    novo_pedido->remetente = solicitante;
+    novo_pedido->fonte = solicitante;
     novo_pedido->prox = NULL;
 
-    if (isEmpty_Fila_de_Pedidos(destinatario->fila_de_pedidos)) {
+    if (isEmpty_Fila_de_Pedidos(destinatario->fila_de_pedidos)) 
+    {
         destinatario->fila_de_pedidos->inf = novo_pedido;
         destinatario->fila_de_pedidos->sup = novo_pedido;
-    } else {
+    } else 
+    {
         destinatario->fila_de_pedidos->sup->prox = novo_pedido;
         destinatario->fila_de_pedidos->sup = novo_pedido;
     }
