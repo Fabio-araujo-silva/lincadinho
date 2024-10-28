@@ -45,14 +45,7 @@ int main() {
             printf("Escreva seu apelido");
             scanf("%s", &apelido);
             Login(listaUsuarios,apelido);
-            break;
-        case 2:
-            Cadastrar(listaUsuarios);
-        default:
-            printf("Opção inválida! Tente novamente.\n");
-            break;
-        }
-        do {
+            do {
             mostrarMenu();
             scanf("%d", &n);
             
@@ -62,96 +55,37 @@ int main() {
             
             switch(n) {
                 case 1://feito
-                    // Cadastrar um novo usuário
-                    Cadastrar(listaUsuarios);
-                case 2://feito
                     // Listar usuários e seus parceiros
                     Listar_Usuarios(listaUsuarios);
                     break;
                 //perdir para ser parceiro do usuario
-                case 3://feito
+                case 2://feito
                     Solicitar_Parceria(listaUsuarios);
                     break;
 
-                case 4:
+                case 3:
                     // Avaliar lista de pedidos de parceria
-                    printf("Entre com seu apelido: ");
-                    scanf(" %s", apelido);
+                    break;
 
-                    usuario = Encontrar(&listaUsuarios, apelido);
-                    if (usuario == NULL) {
-                        printf("Usuário não encontrado.\n");
-                    } else {
-                        while (!isEmpty_Fila_de_Pedidos(usuario->fila_de_pedidos)) {
-                            Usuario *parceiro = Remover_Pedido(usuario);
-                            printf("%s deseja ser seu parceiro. Aceita (sim/nao)? ", parceiro->apelido);
-                            char resposta[4];
-                            scanf("%s", resposta);
-                            if (strcmp(resposta, "sim") == 0) {
-                                Adicionar_Parceiro(usuario, parceiro);
-                                Adicionar_Parceiro(parceiro, usuario);
-                                printf("Parceria com %s aceita.\n", parceiro->apelido);
-                            } else {
-                                printf("Parceria com %s recusada.\n", parceiro->apelido);
-                            }
-                        }
-                        printf("Operação realizada com sucesso.\n");
-                    }
+                case 4:
+                    // Enviar mensagem para um parceiro
                     break;
 
                 case 5:
-                    // Enviar mensagem para um parceiro
-                    printf("Entre com seu apelido: ");
-                    scanf(" %s", apelido);
-                    printf("Entre com o apelido de quem quer enviar mensagem: ");
-                    scanf(" %s", apelidoDest);
-                    printf("Entre com a mensagem: ");
-                    scanf(" %s", mensagem);
-
-                    remetente = Encontrar(&listaUsuarios, apelido);
-                    destinatario = Encontrar(&listaUsuarios, apelidoDest);
-
-                    if (remetente == NULL || destinatario == NULL) {
-                        printf("Erro: um dos usuários não existe.\n");
-                    } else if (!Sao_Amigos(remetente, destinatario)) {
-                        printf("Erro: %s não é amigo de %s.\n", apelido, apelidoDest);
-                    } else {
-                        resultado = Enviar_Mensagem(&listaUsuarios, remetente, apelidoDest, mensagem);
-                        if (resultado == 0)
-                            printf("Mensagem enviada com sucesso.\n");
-                        else
-                            printf("Erro ao enviar mensagem.\n");
-                    }
-                    break;
-
-                case 6:
                     // Ver mensagens recebidas
-                    printf("Entre com seu apelido: ");
-                    scanf(" %s", apelido);
-
-                    usuario = Encontrar(&listaUsuarios, apelido);
-                    if (usuario == NULL) {
-                        printf("Usuário não encontrado.\n");
-                    } else {
-                        printf("Suas mensagens são:\n");
-                        while (!isEmpty_Pilha_de_Mensagens(usuario->pilha_de_mensagens)) {
-                            Ler_Mensagem(usuario);
-                        }
-                        printf("Mensagens exibidas!\n");
-                    }
                     break;
 
-                case 7://feito
+                case 6://feito
                     Sugerir_Amigos(&listaUsuarios);
                     printf("Operação de sugestão de amigos realizada.\n");
                     break;
 
-                case 8://feito
+                case 7://feito
                     ReinicializarSistema(&listaUsuarios);
                     break;
 
                 case 0://feito
-                    printf("Saindo do sistema...\n");
+                    printf("Desconectando...\n");
                     mostrarLogin();
                     break;
 
@@ -159,6 +93,17 @@ int main() {
                     printf("Opção inválida! Tente novamente.\n");
             }
         }while (n != 0);
+            break;
+        case 2:
+            Cadastrar(listaUsuarios);
+            
+        case 0:
+            printf("Saindo do Sistema...\n");
+            break;
+        default:
+            printf("Opção inválida! Tente novamente.\n");
+            break;
+        }
     }while(option != 0);
 
     return 0;
