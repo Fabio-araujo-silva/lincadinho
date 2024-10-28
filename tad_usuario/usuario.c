@@ -317,10 +317,13 @@ void ReinicializarSistema(ListaUsuario *LU)
     printf("Sistema reinicializado.\n");
 }
 
-int Solicitar_Parceria(ListaUsuario *LU, char apelido_solicitante[MAX_caracter_apelido], char apelido_destinatario[MAX_caracter_apelido]) 
+int Solicitar_Parceria(ListaUsuario *LU) 
 {
-    Usuario *solicitante = Encontrar(LU, apelido_solicitante);
-    Usuario *destinatario = Encontrar(LU, apelido_destinatario);
+    char apelido_solicitante[MAX_caracter_apelido], apelido_destinatario[MAX_caracter_apelido];
+    printf("Entre com seu apelido: ");
+    scanf("%s", apelido_solicitante);
+    printf("Entre com o apelido de quem quer ser parceiro: ");
+    scanf("%s", apelido_destinatario);
 
     if (solicitante == NULL) 
     {
