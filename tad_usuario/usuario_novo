@@ -1,110 +1,372 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "Usuario.h"
+#include "usuario.h"
 
-
-
-// Função para exibir o menu de opções
-void mostrarMenu() {
-    printf("\nCaro usuário, suas opções são:\n");
-    printf("1) Cadastrar um usuário\n");
-    printf("2) Listar usuários cadastrados e suas informações\n");
-    printf("3) Pedir para ser parceiro de um usuário\n");
-    printf("4) Avaliar lista de pedidos de parceria\n");
-    printf("5) Enviar mensagem para um parceiro\n");
-    printf("6) Ver mensagens recebidas\n");
-    printf("7) Sugerir novas parcerias\n");
-    printf("8) Reinicializar sistema\n");
-    printf("0) Sair\n");
-    printf("O que deseja fazer? ");
-}
-void mostrarLogin(){
-    printf("BEM VINDO AO LINKADINHO AGORA VENDA SEUS DADOS");
-    printf("Escolha entre fazer Login ou Cadastro");
-    printf("1) Login");
-    printf("2) Cadastro");
-    printf("Escreva o número 1 ou 2");
+void Criar_Pilha_de_Mensagens(Pilha_de_mensagens *PM) 
+{
+    PM->topo = NULL;
 }
 
-int main() {
-    int n, option;
-    char apelido[MAX_caracter_apelido];
-        // Declara o usuario que usará o program
-    Usuario *atual;
-    // Declara a lista principal de usuários
-    ListaUsuario listaUsuarios;
-    printf("Escolha se quer fazer 1)Login ou 2)Cadastrar (Escreva o número 1 ou 2)");   
-    scanf("%d",&option);
+int isEmpty_Pilha_de_Mensagens(Pilha_de_mensagens *PM) 
+{
+    return (PM->topo == NULL ? True : False);
+}
 
-    do{
-        mostrarLogin();
-        switch (option)
+void Criar_Fila_de_Pedidos(Fila_de_Pedidos *FP) 
+{
+    FP->inf = NULL;
+    FP->sup = NULL;
+}
+
+int isEmpty_Fila_de_Pedidos(Fila_de_Pedidos *FP) 
+{
+    return (FP->inf == NULL ? True : False);
+}
+
+void Criar_ListaUsuario(ListaUsuario* LU) 
+{
+    LU->inf = NULL;
+    LU->sup = NULL;
+}
+
+int isEmpty_ListaUsuario(ListaUsuario *LU) 
+{
+    return (LU->inf == NULL ? True : False);
+}
+
+void Criar_ListaAmigos(ListaAmigos * LA) 
+{
+    LA->inf = NULL;
+    LA->sup = NULL;
+}
+
+int isEmpty_ListaAmigos(ListaAmigos *LA) 
+{
+    return (LA->inf == NULL ? True : False);
+}
+
+int Adicionar_Usuario(ListaUsuario *LU, char nome[MAX_caracter_nome], char apelido[MAX_caracter_apelido]) 
+{
+    Usuario *novo = (Usuario*) malloc(sizeof(Usuario));
+    if(novo == NULL)
+        return 1;
+    
+    strcpy(novo->nome, nome);
+    strcpy(novo->apelido, apelido);
+
+    novo->lista_amigos = (ListaAmigos*) malloc(sizeof(ListaAmigos));
+    if (novo->lista_amigos == NULL) 
+        return 1;
+    Criar_ListaAmigos(novo->lista_amigos);
+
+    novo->pilha_de_mensagens = (Pilha_de_mensagens*) malloc(sizeof(Pilha_de_mensagens));
+    if (novo->pilha_de_mensagens == NULL) 
+        return 1;
+    Criar_Pilha_de_Mensagens(novo->pilha_de_mensagens);
+
+    novo->fila_de_pedidos = (Fila_de_Pedidos*) malloc(sizeof(Fila_de_Pedidos));
+    if (novo->fila_de_pedidos == NULL) 
+        return 1;
+    Criar_Fila_de_Pedidos(novo->fila_de_pedidos);
+    
+    novo->prox = NULL;
+
+    if(isEmpty_ListaUsuario(LU))
+    {
+        LU->inf = novo;
+        LU->sup = novo;
+    }
+
+    LU->sup->prox = novo;
+    LU->sup = novo;
+
+    return 0;
+}
+
+// Esta função retorna um ponteiro para um usuário dado seu apelido
+Usuario* Encontrar(ListaUsuario *LU, char apelido[MAX_caracter_apelido])
+{
+    // Retorna um ponteiro nulo caso não haja usuários
+    if(isEmpty_ListaUsuario(LU))
+    {
+        return NULL;
+    }
+
+    // Itera sobre a lista de usuários até encontrar o usuário com o apelido dado
+    Usuario *temp = LU->inf;
+    // Lembre-se que strcmp(<str1>, <str2>) retorna 0 se str1 == str2
+    while(temp != NULL && strcmp(temp->apelido, apelido) != 0)
+    {
+        temp = temp->prox;
+    }
+
+    // Note que caso o usuário procurado não estiver na lista, a função retorna NULL
+    return (temp);
+}
+
+// versao 1
+void Cadastrar(ListaUsuario *LU)
+{
+    char str1[MAX_caracter_nome], str2[MAX_caracter_apelido];
+
+    // Lê as informações do usuário
+    printf("Bem-vindo! Insira as informacoes para o cadasto:\n");
+    printf("Nome: ");
+    scanf("%s", str1);
+
+    // Lê o apelido e verifica se um igual já existe na lista
+    do
+    {
+        printf("Apelido: ");
+        scanf("%s", str2);
+    }
+    while(Encontrar(LU, str2) != NULL);
+
+    // Cria o novo usuário e o coloca no fim da lista de usuários
+    Adicionar_Usuario(LU, str1, str2);
+}
+
+// Versao recursiva (essa ta maneira)
+int Cadastrar(ListaUsuario *LU, char nome[MAX_caracter_nome], char apelido[MAX_caracter_apelido]) 
+{
+    if(Encontrar(LU, apelido))
+    {
+        printf("Apelido ja existe!\n");
+        return 1;
+    }
+
+    Adicionar_Usuario(LU, nome, apelido);
+    return 0;  
+}
+
+Usuario* Login(ListaUsuario *LU, char apelido[MAX_caracter_apelido])
+{
+    return (Encontrar(LU, apelido));
+}
+
+// Esta é uma função auxiliar para tratar o caso em que um remetente não é amigo de seu destinatário
+int Sao_Amigos(ListaUsuario *LU, Usuario *remetente, char apelido_destinatario[MAX_caracter_apelido]) 
+{
+    Usuario *destinatario = Encontrar(LU, apelido_destinatario);
+    // Itera sobre a lista de amigos procurando pelo apelido do destinatario
+    Amigo *temp = remetente->lista_amigos->inf;
+    while(temp != NULL && strcmp(temp->conexao->apelido, destinatario->apelido) != 0)
+    {
+        temp = temp->prox;
+    }
+
+    // Retorna 0 se temp == NULL e 1 se temp != NULL
+    return (temp != NULL);
+}
+
+int Enviar_Mensagem(ListaUsuario *LU, Usuario* remetente, char apelido_destinatario[MAX_caracter_apelido], char mensagem[MAX_caracter_mensagem])
+{
+    Usuario *destinatario = Encontrar(LU, apelido_destinatario);
+    
+    if (destinatario == NULL || !Sao_Amigos(LU, remetente->apelido, destinatario->apelido)) 
+    {
+        // Nao sao amigos ou o destinatario nao existe
+        return 1;
+    }
+
+    Mensagem *nova_mensagem = (Mensagem *)malloc(sizeof(Mensagem));
+    if (nova_mensagem == NULL) 
+    {
+        // Sem memoria
+        return 1;
+    }
+    
+    // Adiciona a nova mensagem à pilha de mensagens do destinarário
+    strcpy(nova_mensagem->mensagem, mensagem);
+    nova_mensagem->prox = destinatario->pilha_de_mensagens->topo;
+    destinatario->pilha_de_mensagens->topo = nova_mensagem;
+    
+    // Deu tudo certo
+    return 0;
+}
+
+int Ler_Mensagem(ListaUsuario *LU, Usuario *usuario) 
+{
+    if(isEmpty_Pilha_de_Mensagens(usuario->pilha_de_mensagens))
+    {
+        return 1;
+    }
+
+    // Mostra a mensagem e popa ela
+    printf("%s\n", usuario->pilha_de_mensagens->topo->mensagem);
+    Mensagem *aux = usuario->pilha_de_mensagens->topo;
+    usuario->pilha_de_mensagens->topo = usuario->pilha_de_mensagens->topo->prox;
+    free(aux);
+
+    return 0;
+}
+
+void Sugerir_Amigos(ListaUsuario *LU, Usuario *usuario) 
+{
+    // Itera sobre todos os usuários cadastrados na lista
+    Usuario *temp = LU->inf;
+
+    while (temp != NULL) 
+    {
+        // Não sugere o próprio usuário como amigo
+        if (temp == usuario) 
         {
-        case 1:
-            printf("Escreva seu apelido");
-            scanf("%s", &apelido);
-            Login(listaUsuarios,apelido);
-            do {
-            mostrarMenu();
-            scanf("%d", &n);
-            
-            int resultado;
-            
-            Usuario  *usuario, *remetente, *destinatario; 
-            
-            switch(n) {
-                case 1://feito
-                    // Listar usuários e seus parceiros
-                    Listar_Usuarios(listaUsuarios);
-                    break;
-                //perdir para ser parceiro do usuario
-                case 2://feito
-                    Solicitar_Parceria(listaUsuarios);
-                    break;
-
-                case 3:
-                    // Avaliar lista de pedidos de parceria
-                    break;
-
-                case 4:
-                    // Enviar mensagem para um parceiro
-                    break;
-
-                case 5:
-                    // Ver mensagens recebidas
-                    break;
-
-                case 6://feito
-                    Sugerir_Amigos(&listaUsuarios);
-                    printf("Operação de sugestão de amigos realizada.\n");
-                    break;
-
-                case 7://feito
-                    ReinicializarSistema(&listaUsuarios);
-                    break;
-
-                case 0://feito
-                    printf("Desconectando...\n");
-                    mostrarLogin();
-                    break;
-
-                default://feito
-                    printf("Opção inválida! Tente novamente.\n");
-            }
-        }while (n != 0);
-            break;
-        case 2:
-            Cadastrar(listaUsuarios);
-            
-        case 0:
-            printf("Saindo do Sistema...\n");
-            break;
-        default:
-            printf("Opção inválida! Tente novamente.\n");
-            break;
+            temp = temp->prox;
+            continue;
         }
-    }while(option != 0);
 
+        // Só sugere parceria se temp e usuario não são amigos diretos
+        if (!Sao_Amigos(LU, usuario->apelido, temp->apelido)) 
+        {
+            // Verifica se possuem amigos em comum
+            Amigo *amigo1 = usuario->lista_amigos->inf;
+            while (amigo1 != NULL) 
+            {
+                Amigo *amigo2 = temp->lista_amigos->inf;
+                while (amigo2 != NULL) 
+                {
+                    // Se houver amigo em comum, sugere a parceria
+                    if (strcmp(amigo1->conexao->apelido, amigo2->conexao->apelido) == 0) 
+                        printf("Sugestão de nova parceria: %s\n", temp->apelido);
+                    amigo2 = amigo2->prox;
+                }
+                amigo1 = amigo1->prox;
+            }
+        }
+
+        // Avança para o próximo usuário na lista
+        temp = temp->prox;
+    }
+}
+
+// Função para listar todos os usuários e seus parceiros de trabalho
+void Listar_Usuarios(ListaUsuario *LU) 
+{
+    Usuario *usuario_atual = LU->inf;
+
+    if (usuario_atual == NULL) 
+    {
+        printf("Nenhum usuário cadastrado.\n");
+        return;
+    }
+
+    printf("Pessoas e seus parceiros:\n");
+    while (usuario_atual != NULL) 
+    {
+        printf("%s (%s) com os parceiros seguintes:", usuario_atual->nome, usuario_atual->apelido);
+        Amigo *parceiro_atual = usuario_atual->lista_amigos->inf;
+
+        if (parceiro_atual == NULL) 
+        {
+            printf(" Nenhum parceiro\n");
+        } 
+        else 
+        {
+            while (parceiro_atual != NULL) 
+            {
+                printf(" %s", parceiro_atual->conexao->apelido);
+                parceiro_atual = parceiro_atual->prox;
+                if (parceiro_atual != NULL) printf(",");
+            }
+            printf("\n");
+        }
+        usuario_atual = usuario_atual->prox;
+    }
+    printf("Listagem completa!\n");
+}
+
+// Função para reinicializar o sistema, liberando memória de todas as estruturas
+void ReinicializarSistema(ListaUsuario *LU) 
+{
+    Usuario *usuario_atual = LU->inf;
+
+    while (usuario_atual != NULL) 
+    {
+        // Libera a lista de amigos do usuário atual
+        Amigo *parceiro_atual = usuario_atual->lista_amigos->inf;
+        while (parceiro_atual != NULL) 
+        {
+            Amigo *temp_amigo = parceiro_atual;
+            parceiro_atual = parceiro_atual->prox;
+            free(temp_amigo);
+        }
+        free(usuario_atual->lista_amigos);
+
+        // Libera a pilha de mensagens do usuário atual
+        Mensagem *mensagem_atual = usuario_atual->pilha_de_mensagens->topo;
+        while (mensagem_atual != NULL) 
+        {
+            Mensagem *temp_mensagem = mensagem_atual;
+            mensagem_atual = mensagem_atual->prox;
+            free(temp_mensagem);
+        }
+        
+        free(usuario_atual->pilha_de_mensagens);
+
+        // Libera a fila de pedidos do usuário atual
+        Pedido *pedido_atual = usuario_atual->fila_de_pedidos->inf;
+        while (pedido_atual != NULL) 
+        {
+            Pedido *temp_pedido = pedido_atual;
+            pedido_atual = pedido_atual->prox;
+            free(temp_pedido);
+        }
+
+        free(usuario_atual->fila_de_pedidos);
+
+        // Libera o usuário atual
+        Usuario *temp_usuario = usuario_atual;
+        usuario_atual = usuario_atual->prox;
+        free(temp_usuario);
+    }
+
+    // Reinicia a lista de usuários
+    LU->inf = NULL;
+    LU->sup = NULL;
+
+    printf("Sistema reinicializado.\n");
+}
+
+int Solicitar_Parceria(ListaUsuario *LU, Usuario *solicitante, char apelido_destinatario[MAX_caracter_apelido]) 
+{
+    Usuario* destinatario = Encontrar(LU, apelido_destinatario);
+
+    char apelido_solicitante[MAX_caracter_apelido], apelido_destinatario[MAX_caracter_apelido];
+    printf("Entre com seu apelido: ");
+    scanf("%s", apelido_solicitante);
+    printf("Entre com o apelido de quem quer ser parceiro: ");
+    scanf("%s", apelido_destinatario);
+
+    if (solicitante == NULL) 
+    {
+        printf("Usuário solicitante '%s' não encontrado.\n", apelido_solicitante);
+        return 1;
+    }
+
+    if (destinatario == NULL) 
+    {
+        printf("Usuário destinatário '%s' não encontrado.\n", apelido_destinatario);
+        return 1;
+    }
+
+    Pedido *novo_pedido = (Pedido *) malloc(sizeof(Pedido));
+    if (novo_pedido == NULL) 
+    {
+        printf("Erro de memória ao criar pedido de parceria.\n");
+        return 1;
+    }
+
+    novo_pedido->fonte = solicitante;
+    novo_pedido->prox = NULL;
+
+    if (isEmpty_Fila_de_Pedidos(destinatario->fila_de_pedidos)) 
+    {
+        destinatario->fila_de_pedidos->inf = novo_pedido;
+        destinatario->fila_de_pedidos->sup = novo_pedido;
+    } else 
+    {
+        destinatario->fila_de_pedidos->sup->prox = novo_pedido;
+        destinatario->fila_de_pedidos->sup = novo_pedido;
+    }
+
+    printf("Pedido de parceria enviado de '%s' para '%s' com sucesso!\n", apelido_solicitante, apelido_destinatario);
     return 0;
 }
