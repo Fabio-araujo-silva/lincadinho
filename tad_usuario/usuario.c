@@ -100,6 +100,27 @@ Usuario* Encontrar(ListaUsuario *LU, char apelido[MAX_caracter_apelido])
     return (temp);
 }
 
+int Cadastrar(ListaUsuario *LU)
+{
+    char str1[MAX_caracter_nome], str2[MAX_caracter_apelido];
+
+    // Lê as informações do usuário
+    printf("Bem-vindo! Insira as informacoes para o cadasto:\n");
+    printf("Nome: ");
+    scanf("%s", str1);
+
+    // Lê o apelido e verifica se um igual já existe na lista
+    do
+    {
+        printf("Apelido: ");
+        scanf("%s", str2);
+    }
+    while(Encontrar(LU, str2) != NULL);
+
+    // Cria o novo usuário e o coloca no fim da lista de usuários
+    Adicionar_Usuario_Fim(LU, str1, str2);
+}
+
 // Esta é uma função auxiliar para tratar o caso em que um remetente não é amigo de seu destinatário
 int Sao_Amigos(Usuario *remetente, Usuario *destinatario) 
 {
