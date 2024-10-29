@@ -74,13 +74,12 @@ Usuario* encontrarUsuario(ListaUsuarios *lista, char apelido[MAX_APELIDO]) {
 }
 
 int cadastrarUsuario(ListaUsuarios *lista, char nome[MAX_NOME], char apelido[MAX_APELIDO]) {
-    if (encontrarUsuario(lista, apelido) != NULL) {
+    if (encontrarUsuario(lista, apelido) != NULL)
         return 1;
-    } else if (adicionarUsuario(lista, nome, apelido) == 0) {
+    else if (adicionarUsuario(lista, nome, apelido) == 0) {
         return 0;
-    } else {
+    else
         return 2;
-    }
 }
 
 int saoAmigos(Usuario *remetente, Usuario *destinatario) {
