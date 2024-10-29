@@ -129,7 +129,7 @@ int lerMensagens(Usuario *usuario) {
     Mensagem *atual;
     while (usuario->mensagens->topo != NULL) {
         atual = usuario->mensagens->topo;
-        printf("Mensagem: %s\n", atual->conteudo);
+        printf("De: %s - Mensagem: %s\n", atual->remetente, atual->conteudo); // exibe quem enviou
         usuario->mensagens->topo = atual->proxima;
         free(atual);
     }
