@@ -235,22 +235,32 @@ void avaliarPedidosParceria(Usuario *usuario) {
     usuario->pedidos->inicio = usuario->pedidos->fim = NULL;
 }
 
-void sugerirNovasParcerias(ListaUsuarios *lista, Usuario *usuario) {
+void sugerirParcerias(ListaUsuarios *lista, Usuario *usuario) {
     if (listaUsuariosVazia(lista)) {
         printf("Nenhum usuário cadastrado.\n");
         return;
     }
-    int encontrou = 0;
-    Usuario *atual = lista->inicio;
-    while (atual != NULL) {
-        if (atual != usuario && !saoAmigos(usuario, atual)) {
-            printf("Sugestão de parceria: %s (%s)\n", atual->nome, atual->apelido);
-            encontrou = 1;
+
+    // Percorre a lista de amigos do usuário
+    Amigo *amigoAtual = usuario->amigos->inicio;
+    while (amigoAtual != NULL) {
+        Usuario *amigo = amigoAtual->usuario;
+
+        // Agora percorre os amigos do amigo
+        Amigo *amigoDeAmigo = amigo->amigos->inicio;
+        while (amigoDeAmigo != NULL) {
+            Usuario *sugestao = amigoDeAmigo->usuario;
+
+            // Verifica se a sugestão não é o usuário solicitante e se não são amigos
+            if (sugestao != usuario && !saoAmigos(usuario, sugestao)) {
+                printf("Sugestão de nova parceria: %s (%s)\n", sugestao->nome, sugestao->apelido);
+            }
+
+            amigoDeAmigo = amigoDeAmigo->proximo;
         }
-        atual = atual->proximo;
+
+        amigoAtual = amigoAtual->proximo;
     }
-    if (!encontrou)
-        printf("Nenhuma sugestão disponível.\n");
 }
 
 void mostrarAmigos(Usuario *usuario) {
