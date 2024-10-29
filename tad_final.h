@@ -1,3 +1,13 @@
+/*
+LISTA DE ERROS:
+
+Cadastrar usuario:
+0 - sucesso
+1 - apelido ja usado
+2 - erro ao cadastrar
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,7 +78,7 @@ void criarListaAmigos(ListaAmigos *lista);
 int listaAmigosVazia(ListaAmigos *lista);
 int adicionarUsuario(ListaUsuarios *lista, char nome[MAX_NOME], char apelido[MAX_APELIDO]);
 Usuario* encontrarUsuario(ListaUsuarios *lista, char apelido[MAX_APELIDO]);
-void cadastrarUsuario(ListaUsuarios *lista);
+int cadastrarUsuario(ListaUsuarios *lista, char *nome, char *apelido);
 int saoAmigos(Usuario *remetente, Usuario *destinatario);
 int enviarMensagem(Usuario *remetente, Usuario *destinatario, char mensagem[MAX_MENSAGEM]);
 int lerMensagens(Usuario *usuario);

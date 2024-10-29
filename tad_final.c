@@ -73,18 +73,13 @@ Usuario* encontrarUsuario(ListaUsuarios *lista, char apelido[MAX_APELIDO]) {
     return NULL;
 }
 
-void cadastrarUsuario(ListaUsuarios *lista) {
-    char nome[MAX_NOME], apelido[MAX_APELIDO];
-    printf("Nome: ");
-    scanf(" %[^\n]s", nome);
-    printf("Apelido: ");
-    scanf(" %s", apelido);
+int cadastrarUsuario(ListaUsuarios *lista, char nome[MAX_NOME], char apelido[MAX_APELIDO]) {
     if (encontrarUsuario(lista, apelido) != NULL) {
-        printf("Apelido já em uso. Tente outro.\n");
+        return 1;
     } else if (adicionarUsuario(lista, nome, apelido) == 0) {
-        printf("Usuário cadastrado com sucesso!\n");
+        return 0;
     } else {
-        printf("Erro ao cadastrar usuário.\n");
+        return 2;
     }
 }
 

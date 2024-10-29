@@ -1,7 +1,8 @@
 #include "tad_final.h"
 
-int main() {
+void cadastrarUsuario_main(ListaUsuarios *lista, char *nome, char *apelido);
 
+int main() {
     ListaUsuarios *lista = (ListaUsuarios *)malloc(sizeof(ListaUsuarios));
     if (lista == NULL) {
         printf("Erro ao inicializar o sistema.\n");
@@ -10,10 +11,11 @@ int main() {
     criarListaUsuarios(lista);
 
     int opcao;
-    char apelido[MAX_APELIDO];
+    char apelido[MAX_APELIDO], nome[MAX_NOME];
+
     Usuario *usuarioAtual = NULL;
 
-    while (TRUE) {
+    while (1) {
         printf("Opcoes:\n");
         printf("1) Cadastrar usuario\n");
         printf("2) Listar usuarios\n");
@@ -30,7 +32,7 @@ int main() {
 
         switch (opcao) {
             case 1:
-                cadastrarUsuario(lista);
+                cadastrarUsuario_main(lista, nome, apelido);
                 break;
             case 2:
                 listarUsuarios(lista);
@@ -105,7 +107,6 @@ int main() {
                 }
                 break;
             case 8:
-                // Mostrar amigos do usuário
                 printf("Entre com seu apelido: ");
                 scanf("%s", apelido);
                 usuarioAtual = encontrarUsuario(lista, apelido);
@@ -128,4 +129,23 @@ int main() {
         }
     }
     return 0;
+}
+
+void cadastrarUsuario_main(ListaUsuarios *lista, char *nome, char *apelido) {
+    int erro = 0;
+
+    printf("Nome: ");
+    scanf(" %[^\n]s", nome);
+    printf("Apelido: ");
+    scanf(" %s", apelido);
+
+    erro = cadastrarUsuario(lista, nome, apelido);
+    
+    if (erro == 1) {
+        printf("Apelido já em uso. Tente outro.\n");
+    } else if (erro == 0) {
+        printf("Usuário cadastrado com sucesso!\n");
+    } else {
+        printf("Erro ao cadastrar usuário.\n");
+    }
 }
