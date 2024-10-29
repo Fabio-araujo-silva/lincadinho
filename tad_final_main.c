@@ -15,6 +15,11 @@ int main() {
 
     Usuario *usuarioAtual = NULL;
 
+    while(666) {
+        printf()
+    }
+
+
     while (1) {
         printf("Opcoes:\n");
         printf("1) Cadastrar usuario\n");
