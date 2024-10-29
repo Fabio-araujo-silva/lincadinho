@@ -1,13 +1,3 @@
-/*
-LISTA DE ERROS:
-
-Cadastrar usuario:
-0 - sucesso
-1 - apelido ja usado
-2 - erro ao cadastrar
-
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -86,5 +76,7 @@ void listarUsuarios(ListaUsuarios *lista);
 void reinicializarSistema(ListaUsuarios *lista);
 int solicitarParceria(Usuario *solicitante, Usuario *destinatario);
 void avaliarPedidosParceria(Usuario *usuario);
-void sugerirNovasParcerias(ListaUsuarios *lista, Usuario *usuario);
+void sugerirParcerias(ListaUsuarios *lista, Usuario *usuario);
 void mostrarAmigos(Usuario *usuario);
+int removerAmigo(ListaUsuarios *lista, Usuario *usuario, char apelido[MAX_APELIDO]);
+int removerUsuario(ListaUsuarios *lista, char apelido[MAX_APELIDO]);
