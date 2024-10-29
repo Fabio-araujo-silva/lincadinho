@@ -1,64 +1,64 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_NOME 50       // Define o número máximo de caracteres para o nome do usuário
-#define MAX_APELIDO 10    // Define o número máximo de caracteres para o apelido do usuário
-#define MAX_MENSAGEM 100  // Define o número máximo de caracteres para uma mensagem
+#define MAX_NOME 50       // tamanho max do nome do usuario
+#define MAX_APELIDO 10    // tamanho max do apelido do usuario
+#define MAX_MENSAGEM 100  // tamanho max da mensagem
 
-#define TRUE 1            // Define uma constante para verdadeiro
-#define FALSE 0           // Define uma constante para falso
+#define TRUE 1            // definicao pra verdadeiro
+#define FALSE 0           // definicao pra falso
 
-// Estrutura para armazenar mensagens em uma pilha de mensagens
+// estrutura pra guardar cada mensagem com o conteudo e quem mandou
 typedef struct Mensagem {
-    char conteudo[MAX_MENSAGEM];   // Conteúdo da mensagem
-    struct Mensagem *proxima;      // Ponteiro para a próxima mensagem na pilha
+    char conteudo[MAX_MENSAGEM];   // texto da mensagem
+    char remetente[MAX_APELIDO];   // quem enviou a mensagem
+    struct Mensagem *proxima;      // proxima mensagem na pilha
 } Mensagem;
 
-// Estrutura para gerenciar a pilha de mensagens de um usuário
+// estrutura pra gerenciar a pilha das mensagens
 typedef struct {
-    Mensagem *topo;   // Ponteiro para o topo da pilha de mensagens
+    Mensagem *topo;   // topo da pilha
 } PilhaMensagens;
 
-// Estrutura para armazenar pedidos de parceria em uma fila de pedidos
+// estrutura pra guardar pedidos de amizade
 typedef struct Pedido {
-    struct Usuario* solicitante;   // Usuário que enviou o pedido de parceria
-    struct Pedido *proximo;        // Próximo pedido na fila
+    struct Usuario* solicitante;   // usuario que pediu amizade
+    struct Pedido *proximo;        // proximo pedido
 } Pedido;
 
-// Estrutura para gerenciar a fila de pedidos de parceria de um usuário
+// estrutura pra gerenciar fila dos pedidos de amizade
 typedef struct {
-    Pedido *inicio, *fim;   // Ponteiros para o início e o fim da fila de pedidos
+    Pedido *inicio, *fim;   // inicio e fim da fila dos pedidos
 } FilaPedidos;
 
-// Estrutura para armazenar cada amigo de um usuário
+// estrutura que guarda cada amigo de um usuario
 typedef struct Amigo {
-    struct Usuario *usuario;   // Ponteiro para o usuário que é amigo
-    struct Amigo *proximo;     // Próximo amigo na lista de amigos
+    struct Usuario *usuario;   // amigo do usuario
+    struct Amigo *proximo;     // proximo amigo na lista
 } Amigo;
 
-// Estrutura para gerenciar a lista de amigos de um usuário
+// estrutura pra lista de amigos
 typedef struct ListaAmigos {
-    Amigo *inicio, *fim;   // Ponteiros para o início e o fim da lista de amigos
+    Amigo *inicio, *fim;   // inicio e fim da lista de amigos
 } ListaAmigos;
 
-// Estrutura para representar cada usuário no sistema
+// estrutura de cada usuario no sistema
 typedef struct Usuario {
-    char nome[MAX_NOME];           // Nome do usuário
-    char apelido[MAX_APELIDO];     // Apelido único do usuário
-    ListaAmigos *amigos;           // Lista de amigos do usuário
-    PilhaMensagens *mensagens;     // Pilha de mensagens recebidas pelo usuário
-    FilaPedidos *pedidos;          // Fila de pedidos de parceria pendentes
-    struct Usuario *proximo;       // Próximo usuário na lista de usuários
+    char nome[MAX_NOME];           // nome do usuario
+    char apelido[MAX_APELIDO];     // apelido unico
+    ListaAmigos *amigos;           // lista dos amigos do usuario
+    PilhaMensagens *mensagens;     // pilha de mensagens do usuario
+    FilaPedidos *pedidos;          // fila de pedidos de amizade
+    struct Usuario *proximo;       // proximo usuario na lista
 } Usuario;
 
-// Estrutura para gerenciar a lista de todos os usuários no sistema
+// estrutura pra lista de todos usuarios no sistema
 typedef struct {
-    Usuario *inicio, *fim;   // Ponteiros para o início e o fim da lista de usuários
+    Usuario *inicio, *fim;   // inicio e fim da lista de usuarios
 } ListaUsuarios;
 
-// Prototipação das funções para gerenciamento do sistema
+// funcoes pra gerenciamento do sistema
 void criarPilhaMensagens(PilhaMensagens *pilha);
 int pilhaMensagensVazia(PilhaMensagens *pilha);
 void criarFilaPedidos(FilaPedidos *fila);
