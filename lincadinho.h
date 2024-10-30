@@ -39,7 +39,7 @@ typedef struct ListaAmigos {
 
 typedef struct Usuario {
     char nome[MAX_NOME];           
-    char apelido[MAX_APELIDO];     // apelido unico
+    char apelido[MAX_APELIDO];     // apelido único
     ListaAmigos *amigos;           
     PilhaMensagens *mensagens;     
     FilaPedidos *pedidos;          
