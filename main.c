@@ -1,9 +1,18 @@
 #include "lincadinho.h"
 
+//função principal do sistema, inicializa a lista de usuários e chama a função de controle lincadinho
 void lincadinho(ListaUsuarios *lista);
+
+//função administrativa para operações de gerenciamento de usuários, como listar, remover e reiniciar o sistema
 void Admin(ListaUsuarios *lista);
+
+//função para gerenciar as opções do usuário logado, incluindo mensagens e parcerias
 void botoesUsuario(ListaUsuarios *lista, Usuario *usuarioAtual);
+
+//função para cadastrar um novo usuário no sistema
 void cadastrarUsuario_main(ListaUsuarios *lista);
+
+//função para realizar o login de um usuário a partir de um apelido fornecido
 Usuario* Logar(ListaUsuarios *lista);
 
 int main() {
@@ -19,6 +28,7 @@ int main() {
     return 0;
 }
 
+//função principal do sistema, responsável pelo controle do menu inicial, como login, cadastro e acesso ao menu de administrador
 void lincadinho(ListaUsuarios *lista) {
     int opcao;
     Usuario *usuarioAtual = NULL;
@@ -59,6 +69,7 @@ void lincadinho(ListaUsuarios *lista) {
     }
 }
 
+//função para realizar o processo de cadastro de um novo usuário no sistema
 void cadastrarUsuario_main(ListaUsuarios *lista) {
     int erro = 0;
     char nome[MAX_NOME], apelido[MAX_APELIDO];
@@ -80,6 +91,7 @@ void cadastrarUsuario_main(ListaUsuarios *lista) {
     }
 }
 
+//função para autenticar um usuário com base em seu apelido
 Usuario* Logar(ListaUsuarios *lista) {
     char apelido[MAX_APELIDO];
 
@@ -91,6 +103,7 @@ Usuario* Logar(ListaUsuarios *lista) {
     return usuarioAtual;
 }
 
+//função que apresenta o menu de ações para o usuário logado, como enviar mensagens e gerenciar parcerias
 void botoesUsuario(ListaUsuarios *lista, Usuario *usuarioAtual) {
     int opcao, erro = 0;
     char apelido[MAX_APELIDO];
@@ -195,6 +208,7 @@ void botoesUsuario(ListaUsuarios *lista, Usuario *usuarioAtual) {
     }
 }
 
+//função para administrar o sistema com funcionalidades como listar, remover usuários e reiniciar o sistema
 void Admin(ListaUsuarios *lista) {
     int opcao, erro = 0;
     char apelido[MAX_APELIDO];
