@@ -149,7 +149,8 @@ int enviarMensagem(Usuario *remetente, Usuario *destinatario, char mensagem[MAX_
 
     // Copia o conteúdo da mensagem passada por parâmetro para a nova mensagem
     strcpy(nova->conteudo, mensagem);
-
+    strcpy(nova->remetente, remetente->apelido);
+    
     // Atualiza a pilha de mensagens do destinatário
     nova->proxima = destinatario->mensagens->topo;
     destinatario->mensagens->topo = nova;
