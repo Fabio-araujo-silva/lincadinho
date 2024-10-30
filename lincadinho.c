@@ -428,19 +428,15 @@ int removerAmigo(ListaUsuarios *lista, Usuario *usuario, char apelido[MAX_APELID
 // Funções de administrador
 
 void listarUsuarios(ListaUsuarios *lista) {
-    // Verifica se a lista de usuários está vazia
     if (listaUsuariosVazia(lista)) {
         printf("Nenhum usuario cadastrado!\n");
-        return; // Encerra a função
+        return;
     }
-    
-    // Inicializa o ponteiro para percorrer a lista de usuários
     Usuario *atual = lista->inicio;
-    
-    // Percorre a lista de usuários e imprime o nome e apelido de cada um
     while (atual != NULL) {
         printf("Nome: %s, Apelido: %s\n", atual->nome, atual->apelido);
-        atual = atual->proximo; // Avança para o próximo usuário
+        mostrarAmigos(atual);
+        atual = atual->proximo;
     }
 }
 
