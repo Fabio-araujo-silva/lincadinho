@@ -164,7 +164,7 @@ void botoesUsuario(ListaUsuarios *lista, Usuario *usuarioAtual) {
                 sugerirParcerias(lista, usuarioAtual);
                 break;
             case 5: {
-                printf("Apelido destinatario: ");
+                printf("Apelido de quem deseja se conectar: ");
                 scanf("%s", apelido);
                 if(strcmp(apelido, usuarioAtual->apelido)) { // se os nomes são diferentes
                     Usuario *destinatario = encontrarUsuario(lista, apelido);
