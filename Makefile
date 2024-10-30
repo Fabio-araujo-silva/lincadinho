@@ -20,6 +20,7 @@ lincadinho.o: lincadinho.c lincadinho.h
 # Alvo para rodar o programa
 run: all
 	./programa
+	make clean
 
 # Limpar os arquivos compilados para recompilar do zero
 clean:
