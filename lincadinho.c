@@ -122,6 +122,7 @@ int enviarMensagem(Usuario *remetente, Usuario *destinatario, char mensagem[MAX_
         return 2;
 
     strcpy(nova->conteudo, mensagem);
+    strcpy(nova->remetente, remetente->apelido);
     nova->proxima = destinatario->mensagens->topo;
     destinatario->mensagens->topo = nova;
     return 0;
