@@ -1,11 +1,8 @@
-#include "tad_final.h"
+#include "lincadinho.h"
 
+// Inicializam as estruturas dinâmicas
 void criarPilhaMensagens(PilhaMensagens *pilha) {
     pilha->topo = NULL;
-}
-
-int pilhaMensagensVazia(PilhaMensagens *pilha) {
-    return (pilha->topo == NULL ? TRUE : FALSE);
 }
 
 void criarFilaPedidos(FilaPedidos *fila) {
@@ -13,17 +10,9 @@ void criarFilaPedidos(FilaPedidos *fila) {
     fila->fim = NULL;
 }
 
-int filaPedidosVazia(FilaPedidos *fila) {
-    return (fila->inicio == NULL ? TRUE : FALSE);
-}
-
 void criarListaUsuarios(ListaUsuarios *lista) {
     lista->inicio = NULL;
     lista->fim = NULL;
-}
-
-int listaUsuariosVazia(ListaUsuarios *lista) {
-    return (lista->inicio == NULL ? TRUE : FALSE);
 }
 
 void criarListaAmigos(ListaAmigos *lista) {
@@ -31,10 +20,24 @@ void criarListaAmigos(ListaAmigos *lista) {
     lista->fim = NULL;
 }
 
+// Verificam se as estruturas estão vazias
+int pilhaMensagensVazia(PilhaMensagens *pilha) {
+    return (pilha->topo == NULL ? TRUE : FALSE);
+}
+
+int filaPedidosVazia(FilaPedidos *fila) {
+    return (fila->inicio == NULL ? TRUE : FALSE);
+}
+
+int listaUsuariosVazia(ListaUsuarios *lista) {
+    return (lista->inicio == NULL ? TRUE : FALSE);
+}
+
 int listaAmigosVazia(ListaAmigos *lista) {
     return (lista->inicio == NULL ? TRUE : FALSE);
 }
 
+// Funções auxiliares para lidar com os nós (usuários) da lista principal
 int adicionarUsuario(ListaUsuarios *lista, char nome[MAX_NOME], char apelido[MAX_APELIDO]) {
     Usuario *novo = (Usuario*) malloc(sizeof(Usuario));
     if (novo == NULL)
@@ -96,6 +99,7 @@ int cadastrarUsuario(ListaUsuarios *lista, char nome[MAX_NOME], char apelido[MAX
         return adicionarUsuario(lista, nome, apelido);
 }
 
+// Função auxiliar que verifica se um usuário é amigo de outro
 int saoAmigos(Usuario *remetente, Usuario *destinatario) {
     Amigo *atual = remetente->amigos->inicio;
     while (atual != NULL) {
@@ -106,6 +110,7 @@ int saoAmigos(Usuario *remetente, Usuario *destinatario) {
     return FALSE;
 }
 
+// Funções de usuário
 int enviarMensagem(Usuario *remetente, Usuario *destinatario, char mensagem[MAX_MENSAGEM]) {
     if (destinatario == NULL)
         return 3; // Destinatário não encontrado
@@ -134,51 +139,6 @@ int lerMensagens(Usuario *usuario) {
         free(atual);
     }
     return 0;
-}
-
-void listarUsuarios(ListaUsuarios *lista) {
-    if (listaUsuariosVazia(lista)) {
-        printf("Nenhum usuário cadastrado.\n");
-        return;
-    }
-    Usuario *atual = lista->inicio;
-    while (atual != NULL) {
-        printf("Nome: %s, Apelido: %s\n", atual->nome, atual->apelido);
-        atual = atual->proximo;
-    }
-}
-
-void reinicializarSistema(ListaUsuarios *lista) {
-    Usuario *atual = lista->inicio;
-    while (atual != NULL) {
-        Usuario *prox = atual->proximo;
-
-        while (atual->mensagens->topo != NULL) {
-            Mensagem *msg = atual->mensagens->topo;
-            atual->mensagens->topo = msg->proxima;
-            free(msg);
-        }
-        free(atual->mensagens);
-
-        while (atual->pedidos->inicio != NULL) {
-            Pedido *pedido = atual->pedidos->inicio;
-            atual->pedidos->inicio = pedido->proximo;
-            free(pedido);
-        }
-        free(atual->pedidos);
-
-        while (atual->amigos->inicio != NULL) {
-            Amigo *amigo = atual->amigos->inicio;
-            atual->amigos->inicio = amigo->proximo;
-            free(amigo);
-        }
-        free(atual->amigos);
-        
-        free(atual);
-        atual = prox;
-    }
-    lista->inicio = lista->fim = NULL;
-    printf("Sistema reinicializado.\n");
 }
 
 int solicitarParceria(Usuario *solicitante, Usuario *destinatario) {
@@ -268,7 +228,6 @@ int solicitarParceria(Usuario *solicitante, Usuario *destinatario) {
     return 0;
 }
 
-
 void avaliarPedidosParceria(Usuario *usuario) {
     if (filaPedidosVazia(usuario->pedidos)) {
         printf("Nenhum pedido de parceria.\n");
@@ -314,7 +273,7 @@ void avaliarPedidosParceria(Usuario *usuario) {
                 }
                 printf("Parceria aceita com %s.\n", atual->solicitante->nome);
             } else {
-                printf("Vocês já são amigos.\n");
+                printf("Voces ja sao amigos.\n");
             }
         Pedido *temp = atual;
         atual = atual->proximo;
@@ -345,7 +304,7 @@ void sugerirParcerias(ListaUsuarios *lista, Usuario *usuario) {
             Usuario *sugestao = amigoDeAmigo->usuario;
 
             if (sugestao != usuario && !saoAmigos(usuario, sugestao)) {
-                printf("Sugestão de nova parceria: %s (%s)\n", sugestao->nome, sugestao->apelido);
+                printf("Sugestao de nova parceria: %s (%s)\n", sugestao->nome, sugestao->apelido);
                 encontrou = 1;
             }
 
@@ -361,7 +320,7 @@ void sugerirParcerias(ListaUsuarios *lista, Usuario *usuario) {
 
 void mostrarAmigos(Usuario *usuario) {
     if (listaAmigosVazia(usuario->amigos)) {
-        printf("%s não tem amigos ainda.\n", usuario->nome);
+        printf("%s nao tem amigos ainda.\n", usuario->nome);
         return;
     }
 
@@ -369,6 +328,46 @@ void mostrarAmigos(Usuario *usuario) {
     Amigo *atual = usuario->amigos->inicio;
     while (atual != NULL) {
         printf(" - %s (apelido: %s)\n", atual->usuario->nome, atual->usuario->apelido);
+        atual = atual->proximo;
+    }
+}
+
+int removerAmigo(ListaUsuarios *lista, Usuario *usuario, char apelido[MAX_APELIDO]) {
+    if (usuario == NULL || usuario->amigos == NULL) return 1;
+
+    Amigo *anterior = NULL;
+    Amigo *atual = usuario->amigos->inicio;
+
+    while (atual != NULL && strcmp(atual->usuario->apelido, apelido) != 0) {
+        anterior = atual;
+        atual = atual->proximo;
+    }
+
+    if (atual == NULL) return 1;
+
+    if (anterior == NULL) {
+        usuario->amigos->inicio = atual->proximo;
+    } else {
+        anterior->proximo = atual->proximo;
+    }
+
+    if (atual == usuario->amigos->fim) {
+        usuario->amigos->fim = anterior;
+    }
+
+    free(atual);
+    return 0;
+}
+
+// Funções de administrador
+void listarUsuarios(ListaUsuarios *lista) {
+    if (listaUsuariosVazia(lista)) {
+        printf("Nenhum usuario cadastrado!\n");
+        return;
+    }
+    Usuario *atual = lista->inicio;
+    while (atual != NULL) {
+        printf("Nome: %s, Apelido: %s\n", atual->nome, atual->apelido);
         atual = atual->proximo;
     }
 }
@@ -430,29 +429,34 @@ int removerUsuario(ListaUsuarios *lista, char apelido[MAX_APELIDO]) {
     return 0;
 }
 
-int removerAmigo(ListaUsuarios *lista, Usuario *usuario, char apelido[MAX_APELIDO]) {
-    if (usuario == NULL || usuario->amigos == NULL) return 1;
+void reinicializarSistema(ListaUsuarios *lista) {
+    Usuario *atual = lista->inicio;
+    while (atual != NULL) {
+        Usuario *prox = atual->proximo;
 
-    Amigo *anterior = NULL;
-    Amigo *atual = usuario->amigos->inicio;
+        while (atual->mensagens->topo != NULL) {
+            Mensagem *msg = atual->mensagens->topo;
+            atual->mensagens->topo = msg->proxima;
+            free(msg);
+        }
+        free(atual->mensagens);
 
-    while (atual != NULL && strcmp(atual->usuario->apelido, apelido) != 0) {
-        anterior = atual;
-        atual = atual->proximo;
+        while (atual->pedidos->inicio != NULL) {
+            Pedido *pedido = atual->pedidos->inicio;
+            atual->pedidos->inicio = pedido->proximo;
+            free(pedido);
+        }
+        free(atual->pedidos);
+
+        while (atual->amigos->inicio != NULL) {
+            Amigo *amigo = atual->amigos->inicio;
+            atual->amigos->inicio = amigo->proximo;
+            free(amigo);
+        }
+        free(atual->amigos);
+        
+        free(atual);
+        atual = prox;
     }
-
-    if (atual == NULL) return 1;
-
-    if (anterior == NULL) {
-        usuario->amigos->inicio = atual->proximo;
-    } else {
-        anterior->proximo = atual->proximo;
-    }
-
-    if (atual == usuario->amigos->fim) {
-        usuario->amigos->fim = anterior;
-    }
-
-    free(atual);
-    return 0;
+    lista->inicio = lista->fim = NULL;
 }
