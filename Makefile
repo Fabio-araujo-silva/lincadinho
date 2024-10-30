@@ -6,12 +6,12 @@ CFLAGS = -Wall
 all: programa
 
 # Compilando o executável `programa` a partir dos objetos Main.o e lincadinhos.o
-programa: Main.o lincadinho.o
-	$(CC) $(CFLAGS) -o programa Main.o lincadinho.o
+programa: main.o lincadinho.o
+	$(CC) $(CFLAGS) -o programa main.o lincadinho.o
 
 # Compilar o arquivo objeto Main.o a partir do fonte Main.c
-Main.o: Main.c lincadinho.h
-	$(CC) $(CFLAGS) -c Main.c
+Main.o: main.c lincadinho.h
+	$(CC) $(CFLAGS) -c main.c
 
 # Compilar o arquivo objeto lincadinho.o a partir do fonte lincadinho.c
 lincadinho.o: lincadinho.c lincadinho.h
