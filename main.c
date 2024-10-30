@@ -109,7 +109,7 @@ void botoesUsuario(ListaUsuarios *lista, Usuario *usuarioAtual) {
     char apelido[MAX_APELIDO];
 
     while (TRUE) {
-        printf("\n====== MENU DE USUARIO ======\n");
+        printf("\n====== Menu de %s ======\n", usuarioAtual->nome);
         printf("1) Enviar mensagem\n");
         printf("2) Ler mensagens\n");
         printf("3) Mostrar amigos\n");
