@@ -512,29 +512,35 @@ void reinicializarSistema(ListaUsuarios *lista) {
         Usuario *prox = atual->proximo; // Guarda o próximo usuário
 
         // Libera mensagens do usuário atual
-        while (atual->mensagens->topo != NULL) {
-            Mensagem *msg = atual->mensagens->topo;
-            atual->mensagens->topo = msg->proxima; // Move para o próximo
-            free(msg); // Libera a memória da mensagem
+        if (atual->mensagens != NULL) {
+            while (atual->mensagens->topo != NULL) {
+                Mensagem *msg = atual->mensagens->topo;
+                atual->mensagens->topo = msg->proxima; // Move para o próximo
+                free(msg); // Libera a memória da mensagem
+            }
+            free(atual->mensagens); // Libera a lista de mensagens
         }
-        free(atual->mensagens); // Libera a lista de mensagens
 
         // Libera pedidos do usuário atual
-        while (atual->pedidos->inicio != NULL) {
-            Pedido *pedido = atual->pedidos->inicio;
-            atual->pedidos->inicio = pedido->proximo; // Move para o próximo
-            free(pedido); // Libera a memória do pedido
+        if (atual->pedidos != NULL) {
+            while (atual->pedidos->inicio != NULL) {
+                Pedido *pedido = atual->pedidos->inicio;
+                atual->pedidos->inicio = pedido->proximo; // Move para o próximo
+                free(pedido); // Libera a memória do pedido
+            }
+            free(atual->pedidos); // Libera a lista de pedidos
         }
-        free(atual->pedidos); // Libera a lista de pedidos
 
         // Libera amigos do usuário atual
-        while (atual->amigos->inicio != NULL) {
-            Amigo *amigo = atual->amigos->inicio;
-            atual->amigos->inicio = amigo->proximo; // Move para o próximo
-            free(amigo); // Libera a memória do amigo
+        if (atual->amigos != NULL) {
+            while (atual->amigos->inicio != NULL) {
+                Amigo *amigo = atual->amigos->inicio;
+                atual->amigos->inicio = amigo->proximo; // Move para o próximo
+                free(amigo); // Libera a memória do amigo
+            }
+            free(atual->amigos); // Libera a lista de amigos
         }
-        free(atual->amigos); // Libera a lista de amigos
-        
+
         free(atual); // Libera a memória do usuário
         atual = prox; // Avança para o próximo usuário
     }
